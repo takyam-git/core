@@ -58,6 +58,8 @@ class Theme implements \ArrayAccess, \Iterator
 	 */
 	protected $paths = array();
 
+	protected $subfolder = '';
+
 	/**
 	 * @var  array  $active  Currently active theme
 	 */
@@ -192,7 +194,7 @@ class Theme implements \ArrayAccess, \Iterator
 			return $this->active['asset_base'].$path;
 		}
 
-		return $this->active['path'].$path;
+		return $this->active['path'].$this->subfolder.$path;
 	}
 
 	/**
@@ -226,6 +228,24 @@ class Theme implements \ArrayAccess, \Iterator
 		$this->active['info']['options'][$option] = $value;
 
 		return $this;
+	}
+
+	/**
+	 * Sets the theme subfolder to use.
+	 *
+	 * @param   string  Subfolder to use
+	 * @return  $this|string
+	 */
+	public function subfolder($subfolder = null)
+	{
+		if ($subfolder !== null)
+		{
+			$this->subfolder = $subfolder.DS;
+
+			return $this;
+		}
+
+		return $this->subfolder;
 	}
 
 	/**
@@ -300,7 +320,7 @@ class Theme implements \ArrayAccess, \Iterator
 		{
 			if (is_dir($path.$theme))
 			{
-				return $path.$theme.DS;
+				return $path.$theme.DS.$this->subfolder;
 			}
 		}
 
@@ -415,10 +435,6 @@ class Theme implements \ArrayAccess, \Iterator
 
 			case 'yaml':
 				$info = \Format::forge(file_get_contents($file), 'yaml')->to_array();
-			break;
-
-			case 'yaml':
-				$info = \Format::forge(file_get_contents($path.$this->config['info_file_name']), 'yaml')->to_array();
 			break;
 
 			case 'php':
@@ -570,10 +586,11 @@ class Theme implements \ArrayAccess, \Iterator
 
 		if ( ! isset($theme['asset_base']))
 		{
-			$assets_folder = rtrim($this->config['assets_folder'], DS).DS;
+			$assets_folder = $this->config['assets_folder'];
 			if (strpos($path, DOCROOT) === 0 and is_dir($path.$assets_folder))
 			{
 				$path = str_replace(DOCROOT, '', $path).$assets_folder;
+				$path = rtrim(str_replace(array('/', '\\'), '/', $path), '/').'/';
 				$theme['asset_base'] = Config::get('base_url').$path;
 			}
 		}
