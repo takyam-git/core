@@ -277,7 +277,8 @@ function setup_autoloader()
 		'Fuel\\Core\\Validation'        => COREPATH.'classes/validation.php',
 		'Fuel\\Core\\Validation_Error'  => COREPATH.'classes/validation/error.php',
 
-		'Fuel\\Core\\View'       => COREPATH.'classes/view.php',
-		'Fuel\\Core\\ViewModel'  => COREPATH.'classes/viewmodel.php',
+		'Fuel\\Core\\View'            => COREPATH.'classes/view.php',
+		'Fuel\\Core\\ViewModel'       => COREPATH.'classes/viewmodel.php',
+		'Fuel\\Core\\ViewModel_Rest'  => COREPATH.'classes/viewmodel/rest.php',
 	));
 };
